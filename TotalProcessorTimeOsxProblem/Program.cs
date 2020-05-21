@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace TotalProcessorTimeOsxProblem
 {
@@ -10,17 +12,33 @@ namespace TotalProcessorTimeOsxProblem
         {
             var processes = Process.GetProcesses();
 
-            try
+            var allExceptions = new List<Tuple<string, int, string, string>>();
+
+            foreach (var process in processes)
             {
-                var timeInformationToBeUsed = processes.Select(x => x.TotalProcessorTime).ToList();
+                try
+                {
+                    var timeInformationToBeUsed = process.TotalProcessorTime;
+                }
+                catch(Exception e)
+                {
+                    allExceptions.Add(new Tuple<string, int, string, string>(process.ProcessName, process.Id, e.Message, e.StackTrace));
+                }
             }
-            catch (Exception e)
+
+            Console.WriteLine($"Errors count: {allExceptions.Count}");
+
+            var numberOfProcessesWithEmptyName = allExceptions.Count(x => string.IsNullOrWhiteSpace(x.Item1));
+
+            Console.WriteLine($"Processes with empty name: {numberOfProcessesWithEmptyName}");
+
+            allExceptions.ForEach(exception =>
             {
-                Console.WriteLine($"Hi dear, I'm {e.GetType()}!");
-                Console.WriteLine("Why am I happening? :P");
-                Console.WriteLine($"Message: {e.Message}");
-                Console.WriteLine($"StackTrace: {e.StackTrace}");
-            }
+                Console.WriteLine($"ProcessName: {exception.Item1}");
+                Console.WriteLine($"ProcessId: {exception.Item2.ToString()}");
+                Console.WriteLine($"Message: {exception.Item3}");
+                Console.WriteLine($"StackTrace: {exception.Item4}");
+            });
 
             Console.ReadKey();
         }
