@@ -1,3 +1,5 @@
+https://github.com/dotnet/runtime/issues/36777
+
 Message: Failed to set or retrieve rusage information. See the error code for OS-specific error information.
 
 StackTrace:   
