@@ -14,9 +14,9 @@ namespace TotalProcessorTimeOsxProblem
             {
                 var timeInformationToBeUsed = processes.Select(x => x.TotalProcessorTime).ToList();
             }
-            catch (InvalidOperationException e)
+            catch (Exception e)
             {
-                Console.WriteLine("Hi dear, I'm InvalidOperationException!");
+                Console.WriteLine($"Hi dear, I'm {e.GetType()}!");
                 Console.WriteLine("Why am I happening? :P");
                 Console.WriteLine($"Message: {e.Message}");
                 Console.WriteLine($"StackTrace: {e.StackTrace}");
